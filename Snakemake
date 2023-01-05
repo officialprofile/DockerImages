@@ -1,0 +1,21 @@
+# Konfiguracja zmiennych środowiskowych
+configfile: "config.yaml"
+
+config = load_config(configfile)
+
+rule preprocess_data:
+    input: "{datadir}/raw_data.csv"
+    output: "{datadir}/clean_data.csv"
+    shell: "python preprocess.py {input} {output}"
+
+# Reguła wywołująca polecenie Basha
+rule plot_data:
+    input: "{datadir}/clean_data.csv"
+    output: "{plotdir}/plot.png"
+    shell: "bash plot.sh {input} {output}"
+
+# Reguła wywołująca skrypt R
+rule fit_model:
+    input: "{datadir}/clean_data.csv"
+    output: "{modeldir}/model.rds"
+    shell: "Rscript fit_model.R {input} {output}"
